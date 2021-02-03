@@ -173,6 +173,7 @@ class LayerIntegratedGradients(LayerAttribution, GradientAttribution):
         internal_batch_size: Union[None, int] = None,
         return_convergence_delta: bool = False,
         attribute_to_layer_input: bool = False,
+        my_flag = False,
     ) -> Union[
         Union[Tensor, Tuple[Tensor, ...], List[Union[Tensor, Tuple[Tensor, ...]]]],
         Tuple[
@@ -476,7 +477,9 @@ class LayerIntegratedGradients(LayerAttribution, GradientAttribution):
                 )
                 # torch.unbind(forward_out) is a list of scalar tensor tuples and
                 # contains batch_size * #steps elements
-                grads = torch.autograd.grad(torch.unbind(output), inputs)
+#                 grads = torch.autograd.grad(torch.unbind(output), inputs)
+                grads = torch.autograd.grad(torch.unbind(output), inputs, create_graph=my_flag)
+
             return grads
 
         self.ig.gradient_func = gradient_func
